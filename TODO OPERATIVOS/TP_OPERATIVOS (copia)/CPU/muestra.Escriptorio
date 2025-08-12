@@ -1,0 +1,18 @@
+#Abrir recibirá un path del archivo a abrir y abrir un nuevo archivo
+abrir /equipos/Racing.txt
+#Concatenar hace correr una unidad de tiempo de quantum, sin parametros
+concentrar
+#Asignar asigna datos a una línea dentro de path pasado
+asignar /equipos/Racing.txt 9 GustavoBou
+#Wait permitirá la espera y retención de distintos recursos
+wait Conmebol
+#Signal permitirá la liberación de un recurso que son administrados S-AFA.
+signal Conmebol
+#Flush permite guardar el contenido de FM9 a MDJ
+flush /equipos/Racing.txt
+#Close permite liberar un archivo abierto que posea el G.DT
+close /equipos/Racing.txt
+#Crear permitirá crear un nuevo archivo en el MDJ
+crear /equipos/Racing.txt 11
+#Borrar permitirá eliminar un archivo de MDJ
+borrar /equipos/Racing.txt
