@@ -1,0 +1,45 @@
+Problemas
+**************
+Ejercicio 1
+**************
+dBm = dBu + "factor de corregcion"
+dBm = dBu + 10*log(600/Z)
+El "factor de corregcion" es != 0 si la impedancia(Z) es distinta de 600 [ohm]
+Pag 94 del Libro
+
+
+**************
+Ejercicio 2
+**************
+Receptor = 0.3uW = -35.23dBm
+2 Conectores -> 2*0.8
+14 Empalmes -> 14*0.3
+Atenuacion por cable -> 15Km*1.5dB/Km=22.5dB
+PTx + G >= SRx + P
+PTX >= -35.23dBm + 14*0.3 + 2*0.8 + 22.5dB
+PTX >= -29.43dBm + 4.2 + 1.6 + 22.5dB
+PTX >= -1,13dBm
+Luego la PTX_min = -1,13 dBm= 0.7709mW
+
+
+**************
+Ejercicio 3
+**************
+Aplicar la Formula del AB de la FO = 0.44/sqrt(l2^2-l1^2)
+
+
+Teoria
+
+Ejercicio 1
+
+Vt=Vm*log2(n)
+Aumentando la cant de niveles
+
+Ejercicio 2
+
+C=Δf*log2(1+S/N)
+Si S=N
+C=Δf*log2(2)=Δf
+Si S=3*N
+C=Δf*log2(4)=Δf*2
+Y asi sucesivamente hacemos una grafica ??

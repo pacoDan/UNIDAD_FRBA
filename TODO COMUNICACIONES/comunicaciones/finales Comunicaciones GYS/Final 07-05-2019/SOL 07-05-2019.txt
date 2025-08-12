@@ -1,0 +1,100 @@
+SOL FINAL 7-05-2019
+
+*********************
+Ejercicio 1
+*********************
+Tau = 0.008
+Vm = 1/Tau = 1/0.008 = 125 Baudio.
+
+P(caracter) = 1/256
+I(caracter) = -log2(1/256) = 8 Shannon
+H = (1/256 * 8) * 256 = 8 Shannon/Símbolo
+
+Tasa de Información = H / Tau = 8 / 0.008 = 1000 bps.
+
+T <= C usamos T = C = 2 * AB log2(n).
+
+Para binario --> 2^1 = 2 --> n = 2
+1000 bps = 2 * AB log2(2) = 1000 / 2 = AB --> AB = 500 Hz
+
+Para dibits --> 2^2 = 4 --> n = 4
+1000 bps = 2 * AB log2(4) = 1000 / 4 = AB --> AB = 250 Hz
+
+*********************
+Ejercicio 2
+*********************
+Características = 3.0
+Duración Trama (TS) = 125 us
+Frecuencia Muestreo = 8000 Hz
+Número de bits por trama = 256
+Nro Bits (Datos) / Muestra = 8
+Ley de Compresión = A
+Nro de Canales Telefónicos = 30
+Nro de Canales Señalización y Sincronismo = 2
+Velocidad Muestreo = 8000 m/s
+Velocidad Binaria por Canal = 64000 bps
+Velocidad Transferencia Canal = 2,048 Mbps
+Norma = Europea
+
+1 Canal Telefónico | 8 bits | * 30 canales = 240 bits
+1 Canal Serialización y Sincronismo | 8 bits | * 2 canales = 16 bits
+240 bits + 16 bits → Trama de 256 bits
+
+Velocidad Binaria = Velocidad de Muestreo * Muestra (Bit Datos)
+VB = 8000 m/s * 8 bits/m
+VB = 64.000 bps → 1 canal
+VBT = 64.000 bps * 32→ VBT = 2,048 Mbps
+
+Está resuelto en el Ejercicio 1 y 3 de “MODULACIÓN - PCM" (TP 4 - Parte B).
+
+
+*********************
+Ejercicio 3
+*********************
+Mi sol esta Adjunto en un PDF como lo pense originalmente, es Facil. Aca pongo como lo soluciono el Ayudante Javier Deleon
+Para ambos la Sol es 1160mts
+
+Ganancia del Amplificador = 10*log(PS/PE) donde PS=100*PE
+30dBm + 20dB = -20dBm + (4 x 1)dB + 2dB + pérdidas por empalmes y distancia del enlace
+
+50dBm = -20dBm + 4dB + 2dB + pérdidas por empalmes y distancia del enlace
+
+50dBm = -14dBm + pérdidas por empalmes y distancia del enlace
+
+64dBm = pérdidas por empalmes y distancia del enlace
+
+Sabiendo:
+Cada empalme son 3dB y deben encontrarse de a pares, ya que el
+amplificador se encuentra a mitad de camino
+
+Pierdo 5dB cada 100 mts.
+
+Entonces:
+1 bobina de cada lado significa, pérdidas por 5dB/100mts x 800mts = 40dB
+Si agrego 2 empalmes, 6dB.
+64 - 46 = 18dB
+
+Son 9dB de cada lado, por lo tanto 180mts.
+800 + 360 = 1160 mts.
+
+
+************************************************************************
+Ejercicio 4: está regalado, es la demostración esa que hay que saber de memoria.
+************************************************************************
+Demostración:
+N = α*B (1) siendo α la densidad espectral de ruido.
+C = B * log2 (1 + S/N) (2)
+lim x->0 de (1+x)^(1/x) = e (3)
+
+1. Reemplazando (1) en (2)
+C = B * log2 (1 + S/α*B)
+2. Multiplicar por α/α * S/S
+C = B * log2 (1 + S/α*B) * α/α * S/S
+C = B*α/S * log2 (1 + S/α*B) * S/α
+3. Considerando x = S/α*B por lo que 1/x = α*B/S
+C = 1/x * log2 (1 + x) * S/α
+4. Aplicando propiedad de log
+C = log2 (1 + x)^(1/x) * S/α
+5. Teniendo en cuenta (3) y que si B tiende al infiinito, x = S/(α*B) tiende a 0.
+C = lim x→0 de (log2 (1 + x)^(1/x) * S/α) = log2(e) * S/α = 1.44 S/α
+C = 1.44 S/α

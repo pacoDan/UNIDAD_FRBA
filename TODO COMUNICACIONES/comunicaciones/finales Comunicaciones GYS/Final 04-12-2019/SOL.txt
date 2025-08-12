@@ -1,0 +1,60 @@
+Aca les dejo el parcial... en mi caso me fui porque no sabia como hacer el Practico 2 (eso de graficar y el VOLT ni idea), y no recordaba ni esperaba que pidan saber de memoria una demostracion. Les pido una mano sobre los puntos faltantes que tampoco los encuentro en los apuntes que tengo.
+Practico 1:
+1.a
+AB= 26Mhz - 24Mhz= 2*10^6 HZ
+SN[db]=30 db
+
+SN[db]=10.log(SN[bps]) => 30db= 10.log(SN[bps])
+SN[bps]= 10^(30/10) = 1000bps
+
+La capacidad seria
+C= AB* log2 (1+SN[bps)]= 2*10^6 log2 (1+1000)= 19934452,52 bps
+
+1.b
+En estado Ideal {N=niveles}
+C= 2*AB log2(N)
+19934452,52 = 2*2*10 ^6 log2(N)
+N=2^(19934452,52/ (4*10^6))
+N= 31,64 => N=32 niveles
+
+Practico 2= Ni idea... si alguno lo pude hacer y pasar le agradeceria
+
+Practico 3: Es una demostración a saber de memoria la copio de otro post
+Demostración:
+N = α*B (1) siendo α la densidad espectral de ruido.
+C = B * log2 (1 + S/N) (2)
+lim x->0 de (1+x)^(1/x) = e (3)
+
+1. Reemplazando (1) en (2)
+C = B * log2 (1 + S/α*B)
+2. Multiplicar por α/α * S/S
+C = B * log2 (1 + S/α*B) * α/α * S/S
+C = B*α/S * log2 (1 + S/α*B) * S/α
+3. Considerando x = S/α*B por lo que 1/x = α*B/S
+C = 1/x * log2 (1 + x) * S/α
+4. Aplicando propiedad de log
+C = log2 (1 + x)^(1/x) * S/α
+5. Teniendo en cuenta (3) y que si B tiende al infiinito, x = S/(α*B) tiende a 0.
+C = lim x→0 de (log2 (1 + x)^(1/x) * S/α) = log2(e) * S/α = 1.44 S/α
+C = 1.44 S/α
+
+
+TEORIA
+1. NO IDEA (no lo encontre la respueta ni enl os apuntes... no debo entender a que hace referencia)
+
+2. Pondria lo siguiente:
+Sistema geoestacionario:
+Se utilizan 3 satelites para cubrir toda la tierra
+Se mantienen, como si estuvieran en un punto fijo las 24hs, ya que rotan al mismo tiempo que la tierra.
+Requiere altas potencias de transmision
+Orbita a 35000 km
+
+3.
+Capa fisica:
+Transmite el flujo de bits del medio fisico
+Encargado de la topologia de la red
+Brinda servicio a la capa de enlace
+
+*****
+El 1) teorico sale con la formula tenes que ir poniendo ponele la mitad de S/N que es igual a SNR o el doble y ahi le vas poniendo como cambia la C (capacidad maxima del canal, que te dice que es constante) pero todo lo sacas de la formula.
+*****

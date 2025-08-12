@@ -1,0 +1,26 @@
+*******
+Teoria
+*******
+1) Transmision en banda base
+a) La transmision de señales sin modular solo de codificar, esta codificacion busca eliminar o disminuir la componente continua, aumentar la sincronizacion.
+b) Es utilizada para cortas distancias debido a su bajo costo
+c) En redes LAN
+
+2) Fibra Optica
+a) la monomodo tiene un diametro mas pequeño en el nucleo,donde solo viaja un haz de luz , es mas caro y se usa en largas distancias
+En cambio en el multimodo es mas grande el diametro pueden viajar muchos haz de luz, es mas barato y se usan para cortas distancias
+b) Para monomodo: No sufre Dispersion, pero si dispercion condsndo
+Para multimodo: 
+Ambos Tambien presentan atenuaciones en empalmes
+c) Son los intervalos de menor Atenuacion de la fibra optica en funcion de la longitud de onda
+Primera Ventana: -nm
+Segunda Ventana: -nm
+Tercera Ventana: -nm
+
+
+******
+Practica
+******
+Segun correciones se debe elejir el que no pierde sincronismo de entre los tres (uni,po,bi)
+Que a mi punto de vista es "Bipolar"(por que no se forman un bloque grande de 1's del mismo voltaje)
+

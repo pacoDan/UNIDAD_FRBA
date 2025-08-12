@@ -1,0 +1,52 @@
+Teorico 1.1)
+F.O Monomodo: Super rapido y el que más ancho de banda provee, no rebota en las paredes, muy caro. La cuenta es 10GhZ * KM (OJO! Para F.O la cuenta es Frecuencia multiplicado por KM, no se divide)
+F.O Multimodo: Se subdivide en dos categorias, el escalonado y el gradual. Estos son mas baratos y se usan en las areas metropolitanas.
+Si el folleto tecnico dice 500MHZ * KM, ahi mismo te dice la cuenta. 500 MHZ * 10KM = 5000 MHZ = 5GHZ
+
+Teorico 1.2) La frecuencia de UPLink es la que va desde la tierra hasta el satelite, y la Downlink es la que va desde el satelite hasta la tierra. Se usa la de mayor frecuencia en el Uplink debido a que se necesita más potencia, y es más facil conseguir potencia en la tierra que en el espacio. No se puede usar la misma frecuencia en ambos sentidos debido a que sino habría interferencia de señales. Los repetidores deben siempre usar distintas frecuencias.
+
+Teorico 2.1) DTR, DSR, RTS, CTS, DCD, TD, RD. y hay un esquema entre el ETC y el ECD del Transmisor y el receptor
+
+Teorico 2.2) Muestreo, Cuantificacion (Uniforme o No uniforme) y Codificacion.
+
+
+Ejercicio 1.1) A Echazu le gusta que sepas leer folletos tecnicos, por eso te da este tipo de ejercicios. No es muy complicado, en este caso te lo da directo, en 400 MHZ tenes una atenuacion de 15,5DB cada 100 metros.
+En el tema que me toco a mi, la frecuencia era de 300MHZ con el mismo cuadro. En ese caso tenes que sacar un promedio. (200MHZ + 400MHZ) / 2 = 300MHZ
+(10,5+15,5) / 2 = 13 db cada 100 metros
+Despues tenes todos los datos. Ojo que si se usa la formula de Ptx - Perdidas + Ganancias = Srx, Ptx y Srx estan en DBm, lo que significa que si pasas las sensibilidades a potencias, te daria en mW, y el ejercicio lo pide en W, asi que tienen que despues hacer el calculo.
+
+Ejercicio 1.2) LongitudDeOnda = VelocidaddelaLuz / Frecuencia
+VelocidaddelaLuz = 3 * (10^8) metros/seg
+Frecuencia = 400MHZ = 400 * 10^6 * 1/seg
+LongitudDeOnda = (3 * (10^8) metros/seg) / (400 * 10^6 * 1/seg) = 0,75metros
+Pero como dice que es de "cuarto de longitud de onda" entonces debemos dividirlo por 4
+por ende ==> 0,75 metros / 4 = 0,1875 metros
+
+Para saber en que banda opera, solo con la frecuencia te das cuenta:
+UHF esta en 300MHZ-3000MHZ, por ende la banda que opera es UHF
+
+Ejercicio 2.1) Vt = Vm * log2(n)
+entonces ==> 14400bps/4800baudos = log2(n)
+entonces ==> 3 = log2(n)
+por ende ==> 2^3 = 8
+O sea, la modulacion empleada es un 8-PSK y quiere decir que tiene 8 fases.
+Los angulos de las fases las calculas haciendo 360º / 8, osea 45º por fase
+Cuadro
+000 - 0º
+001 - 45º
+011 - 90º
+010 - 135º
+110 - 180º
+111 - 225º
+101 - 270º
+100 - 315º
+Despues tienen que hacer un circulo con las lineas en esos grados y poner esos bits en el lugar que corresponde
+
+Ejercicio 2.2) Es lo mismo que antes, 19200bps/4800baudos = 4 = log2(n)
+por ende 2^4 = 16
+por ende es una modulacion 16-PSK y emplea 16 fases. Se necesitan 4 bits para transmitir.
+La probabilidad de error AUMENTARIA, dado que se juntarian mas las fases y en voltajes intermedios seria mas propenso a equivocarse como interpretar cada bit.
+
+Me dan paja hacer el 3 y 4, pero no son complicados
+
+Si me confundi, les pido disculpas, pero espero que a alguien le sirva para estudiar para un proximos final

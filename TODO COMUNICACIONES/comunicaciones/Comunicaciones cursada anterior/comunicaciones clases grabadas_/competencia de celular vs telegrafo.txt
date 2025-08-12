@@ -1,0 +1,3 @@
+En el video se ve una competencia de envio de mensajes
+se ve en el telegrafo se envia mas caracteres que un celular y en menos tiempo
+con esto quiero decir que el telegrafo tiene una mayor tasa de informacion, a que el valor sea alto proviene matematicamente y en promedio para cada palabra se uso mucho menos tiempo y que tenga mayor entropia, pero con esto quiero decir que hay un mayor desorden , que ironicamente en el celular hay mas orden (cuando se busca una letra de manera ordenada tecleando y buscando el numero)

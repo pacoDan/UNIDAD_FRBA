@@ -1,0 +1,37 @@
+FINAL 18JUL2018
+1. Enuncie las capas del Modelo OSI y enumere el servicio y las funciones de la capa dos
+De un ejemplo de protocolo
+---
+
+2. En la digitalizacion de señales que tipos de cuantificadores conoce. Explique
+
+
+
+3) Causas de pérdidas en las Fibras Opticas? 
+- Pérdidas por dispersion modal (multimodo)-> diferencias en tiempos de propagacion (caminos diferentes)
+- pérdidas por dispersión cromatica. -> cuando el emisor no genera luz monocromatica (ensanchamiento de pulso)
+- perdiddas por absorción y radiación -> impurezas en el material de la fibra
+- pérdidads por acoplamientos. -> producto de los acoplamientos del circuito óptico
+- pérdidas por dispersión de rayleigh - > perdidas por mala construcción (difracción)"
+						
+TEORIA
+1)Detallar los servicios y funciones de la capa de enlace del modelo iso-osi
+Servicios: Establecer, mantener y liberar conexiones del N3
+Funciones: Control de errores y de flujo de datos.
+
+Delimitar secuencia de bits, asegurando
+transparencia.
+
+Resolver problemas de daño, pérdidas y
+duplicidad.
+
+2) Defina velocidad de modulacion, indicando las unidades de medida.
+La inversa de la medida del intervalo de tiempo nominal más corto entre dos
+instantes significativos sucesivos de la señal modulada
+Es la rapidez con la que varia los niveles de energia de la señal. Se mide en baudios
+
+3) Definir ancho de banda para señales analogicas y para señales digitales
+-> Para señales analogicas:
+   El ancho de banda, es la banda de frecuencias en las que se concentra la mayor cantidad de energia de la señal.
+-> Para señales digitales :
+   Intervalos de frecuencia para las cuales la distorsión lineal y la atenuación permanecen bajo límites determinados y constantes.

@@ -1,0 +1,47 @@
+Lo que esta en [] es como creo es la respuesta
+**********
+Ejercicio 1
+**********
+.) Se usa en la conexion de un transmisor de un receptor: esto me lo digo el profe como respuesta yo hable del ETD y ECD pero era mas simple creo (:'v)
+[Profe me dijo:Esas dos ondas son perpendiculares son campo electronico y magnetica, que se generan ciclicamente...]
+Esto es de teoria basica del cap 1-2 recuerdo haberlo leido pero muy poco
+Se que lo menciono en clase Alsina por que lo vimos en video pero poca o nula
+.) Lo de la Longitud de onda esa si era facil y creo que todos lo deben tener bien
+
+**********
+Ejercicio 2
+**********
+Como podemos aumentar la Vt
+1. Sin aumentar la Vm? 
+[la rpta es aumentar la cant de niveles y hablar
+de que no puede ser infinito tiene un limite ....]
+2. Que implica aumentar la Vm?
+[Yo creo, que implica aumentar el ancho de banda y eso implica $$$]
+
+**********
+Ejercicio 3
+**********
+Hablar sobre el tema de "modem de banda base"
+Hablar sobre los metodos de deteccion de errores
+[son 3, detecctar y no hacer nada/(+)enviar/(+)pedir retrasmision, entiendan bien esto]
+
+**********
+Ejercicio 4
+**********
+Este era facil a partir de un grafico que era un circulo ve de que modulacion es
+como habian 000/001/... y ademas el circulo tiene 2 puntos por amplitud es
+2^3=8 y En cada fase habia 2, varia por la amplitud(Q)
+RPTA: 8-QAM
+[Ademas decir que se modula la fase y la amplitud]
+
+**********
+Ejercicio 5
+**********
+Este de donde lo sacaron WTF Me puse a putear en mi mente a Alsina pero bueno
+[Me olvide lo que dijo el profe pero como es una img del libro de Fusario lo deben encontrar en el libro facilmente]
+
+**************************
+Como recomendacion el profe me dijo que aprendiera bien la terminologia, creo yo porque me exprese como el orto,en la 
+1 pregunta, de mi parte decirles que traten de decir todo lo que saben del tema de la pregunta asi el profe les recomienda de que hablar
+porque se puede hablar de muchas cosas en cuanto al problema pero por lo menos a mi no llegue a entender que tanto debia responder o no
+Y mi recomendacion es [digan de todo,respecto al tema de la pregunta y que este relacionado obviamente]
