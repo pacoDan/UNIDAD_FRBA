@@ -1,0 +1,14 @@
+segmentar es armar el protocolo TCP
+
+Para el parcial:
+- analizar la trama y habra preguntas sobre esa trama,
+que protocolos estan presentes
+- cuales son los protocolos que se usan para el reemsamblado
+- cuales son los campos para el reemzamblado
+- es un protocolo orientado a la conexion
+- hace control de errores
+- digame la ip de origen, la ip de destino
+- tcp fragmenta? no, tcp segmenta
+
+
+- que campos utliza tcp para establecer rel mss? el apreton de manos de tres vias establece el mss, salvo que venga la peticion de icmp

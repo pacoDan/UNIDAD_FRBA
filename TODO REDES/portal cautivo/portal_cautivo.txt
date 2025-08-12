@@ -1,0 +1,37 @@
+Para implementar un portal cautivo, necesitarás los siguientes elementos:
+
+Dispositivo de red: El dispositivo de red que actuará como gateway o enrutador de la red, como un router o un punto de acceso inalámbrico.
+
+Software de portal cautivo: Se trata de un software que se instala en el dispositivo de red y que es el encargado de interceptar el tráfico de los usuarios que se conectan a la red y de redirigirlos al portal de autenticación. Algunos ejemplos de software de portal cautivo son CoovaChilli, OpenWRT o PfSense.
+
+Portal de autenticación: Es la página web que se muestra a los usuarios que se conectan a la red, y donde se les pide que se autentiquen o se registren para poder acceder a Internet. Este portal se puede diseñar en HTML, CSS y JavaScript, y puede incluir una base de datos para almacenar la información de autenticación de los usuarios.
+
+Servidor de autenticación: En caso de que se requiera autenticación de usuarios, se necesitará un servidor de autenticación para validar las credenciales de los usuarios y permitir el acceso a Internet. Este servidor puede ser un servidor RADIUS, LDAP o Active Directory, dependiendo de la infraestructura de la red.
+
+En resumen, para implementar un portal cautivo, necesitarás un dispositivo de red, un software de portal cautivo, un portal de autenticación y, en caso de que se requiera autenticación de usuarios, un servidor de autenticación. Ten en cuenta que los detalles específicos de la implementación dependerán de la infraestructura de la red y de las necesidades del proyecto en particular.
+
+
+
+
+jhonpaco@frba.utn.edu.ar
+dame mas detalles de los software de portal cautivo
+Los software de portal cautivo son programas que se utilizan para interceptar el tráfico de los usuarios que se conectan a una red y redirigirlos a una página de autenticación o registro antes de permitirles acceder a Internet. A continuación, te presento algunos detalles de los software de portal cautivo más utilizados:
+
+CoovaChilli: Es un software de portal cautivo de código abierto que se utiliza en sistemas basados en Linux. CoovaChilli es muy flexible y configurable, y puede integrarse con diferentes sistemas de autenticación, como RADIUS o LDAP. Además, cuenta con una interfaz web para la configuración y administración del portal cautivo.
+
+OpenWRT: Es un firmware de código abierto para routers que permite la instalación de software adicional, como el software de portal cautivo. OpenWRT cuenta con una gran comunidad de usuarios y desarrolladores, lo que permite una amplia variedad de opciones de personalización y configuración.
+
+PfSense: Es un sistema operativo basado en FreeBSD que se utiliza como firewall y router. PfSense incluye un software de portal cautivo integrado, que permite la autenticación de usuarios mediante una variedad de métodos, incluyendo RADIUS, LDAP o autenticación local. PfSense cuenta con una interfaz web para la configuración y administración del portal cautivo, y es una opción popular para redes de mediana y alta complejidad.
+
+Untangle: Es una solución de seguridad de red que incluye un software de portal cautivo. Untangle cuenta con una interfaz gráfica de usuario para la configuración y administración del portal cautivo, y permite la integración con diferentes sistemas de autenticación. Untangle es una opción popular para empresas pequeñas y medianas que buscan una solución todo en uno para la seguridad de su red.
+
+Cada software de portal cautivo tiene sus propias características y requisitos, por lo que es importante evaluar tus necesidades específicas antes de elegir uno. Además, ten en cuenta que la implementación de un portal cautivo puede requerir conocimientos técnicos avanzados y puede tener implicaciones legales, por lo que es recomendable buscar asesoramiento profesional si no tienes experiencia en el tema.
+
+
+
+
+
+
+
+
+ejemplo portalcaptivo.frba.utn.edu.ar:8003/index.php?zone=wpt&redirurl=http%3A%2F%2Fwww.msftconnecttest.com%2Fredirect

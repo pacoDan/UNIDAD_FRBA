@@ -1,0 +1,203 @@
+1.-configurar vlans en los 3 routers
+2.-conectar las pcs y los routers
+3.-definir las ips a las pcs.
+
+
+ACCESO C1 pc9
+IP 192.168.168.34 255.255.255.224
+G 192.168.168.35
+
+acceso C2 pc 11 misma vlan
+ip 192.168.168.35 255.255.255.224
+g 192.168.168.33
+
+acceso c1 pc10 da vlan
+192.168.168.66 255.255.255.224
+g 192.168.168.65
+
+acceso c2 pc12 2da vlan
+192.168.168.67
+g 192.168.168.65
+
+1.- hacer en todos los switch, los de acceso incluido el de ditribucion
+enable
+config t
+vlan 77
+name alumnos
+vlan 88
+name docentes
+
+4.-configurar los puertos para que esten asignados a una vlan en particular
+repetir para los switch de acceso.
+enable 
+config t
+interface f0/1
+switchport acces vlan 77
+exit
+interface f0/2
+switchport acces vlan 88
+exit
+
+5.-configurar el acceso trunk entre los switch de acceso y el de distribución
+config t
+inter f0/24
+switchport mode trunk
+
+desde el de distribución
+config t
+inter f1/1
+switchport mode trunk
+exit
+interface f1/2
+switchport mode trunk
+exit
+
+6.-probar la conexion entre las pcs de la misma vlan debe ser exitosa. entre las pcs de vlans distintas no debe funcionar. 
+
+7.- conectar wifi, modo bridge
+conectar router ethernet 1 y switch de distribución fa3/1, 
+entrar al router a la interfaz
+router IP:
+IP address: 192.168.170.1
+mascara 255.255.255.224
+default gateway: pertenece a la red 192.168.170.2 (es la ip del puerto que se conecta con el router de borde)
+DHCP server settings: 
+ip address: 192.168.180.1
+Start IP address: 192.168.180.2
+Maximum number of user:14 
+guardar
+wireless/basic wireless settings:
+Network Name SSID:routerA
+guardar
+wireless/wireless security:
+Security Mode: WAP2 Personal
+encryption:AES
+passphrase:FR84.U7n
+guardar
+
+ir al equipo
+config/wireless0:
+SSID:routerA
+PSK Pass phrase:FR84.U7n
+WAP2-PSK esta marcado. 
+
+IP configuration:
+marcar DHCP y esperar a que tome la ip
+
+configurar el puerto en el switch de distribucion
+config t
+inter f3/1
+switchport access vlan xx
+
+
+7.- conectar wifi, modo router
+Se debe conectarcon cable cruzado entre el router de borde faethernet 0/1 y el router wifi en puerto internet. 
+config igual para el router y para el dispositivo. 
+el default gateway de ser la ip que tendra el puerto interno del router de borde. la IP pertenece a la red de router IP.
+194.194.194.1
+
+router de borde. 
+config t 
+inter fa0/1
+ip address 194.194.194.1 255.255.255.0
+exit
+inter fa0/1
+no shutdown
+exit
+
+agregar interfaz serial
+HWIC-2T (solo si no esta)
+
+8.-conectar router de borde y router externo
+conectar desde el router externo al router de borde. Las mismas interfaces seriales. El reloj queda en el router externo
+Router borde
+enable
+config t
+inter sx/x/x
+ip address ip mascara
+no shutdown
+encapsulation ppp
+exit
+
+router externo
+enable
+config t
+inter sx/x/x
+ip address ip mascara
+no shutdown
+encapsulation ppp
+exit
+
+ambos deben estar en la misma red. 
+probar si hay ping entre los routers. 
+
+9.- conectar router y switch de distribucion, cable directo
+router fa0/0
+switch distribucion fa0/1
+
+switch distribucion
+enable
+config t
+inter f0/1
+switchport mode trunk 
+no shutdown
+exit
+
+router de borde config subinterfaces 
+enable
+config t
+inter f0/0.19
+encapsulation dot1Q 19
+ip address 172.19.19.1 255.255.255.192
+exit
+inter f0/0.20
+encapsulation dot1Q 20
+ip address 172.20.20.1 255.255.255.192
+exit
+inter f0/0.21
+encapsulation dot1Q 21
+ip address 172.21.21.1 255.255.255.192
+exit
+inter Fa0/0
+no shutdown
+exit
+
+configurar ruta estatica, en el router de borde, para que se pueda hacer ping desde el router de borde al celular
+config t
+ip route 192.168.180.0(dirección DHCP para los celulares) 255.255.255.0 192.168.170.1 (ip del router wireless)
+
+10.-configurar rip en el router de borde
+sh ip route
+router rip 
+network 5.0.0.0
+network 192.168.168.32
+network 192.168.168.64
+network 192.168.170.0
+redistribute static 
+exit
+exit
+sh ip route
+
+configurar ACL
+en el router de borde se debe permitir el paso solamente a la red de la VLAN
+y denegar el paso a de una red de vlan a las otras vlans. Se deben aplicar a las subinterfaces
+Se debe permitir la salida de los dipositivos del router wireless, hacia los hosts de los servidores 
+
+
+
+
+
+
+
+
+
+
+configurar tunel
+entre los router de borde de la regional y el router de borde del rectorado
+
+router de borde del rectorado
+
+
+
+
+

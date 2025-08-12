@@ -1,0 +1,79 @@
+analisis de tramas
+abajo te muestra la macaddress origen abajo en azul para recordarla
+para las vlan tambien
+hacer click en cada uno de los items que aparecen capa 2 y capa 3 y lo señalamos 
+UDP: si llego, bien, y sino lo pido otra vez 
+
+https://www.youtube.com/watch?v=BJ1ShZpzy9k
+https://seguridadyredes.wordpress.com/2008/02/14/analisis-de-red-con-wireshark-interpretando-los-datos/
+
+agarramos una consola y tiramos un ping a otra dir de la misma lan ip: 192.168.3.59, voy a 
+capture y pongo stop 
+
+1) no lo hagamos 
+2) me paro arriba de la trama y me pone en azul la longitud de cada campo y que es 
+3) son 18 bytes para encabezado (6 bytes para destination mac 6 bytes para source mac, 2 
+para tipo y 4 para crc, los 4 de crc no se ven, lo demas lo puedo ver haciendo click en la 
+solapa de ethernet II y ahi me dice el encabezado sin crc
+4) cola no tiene, ya que segun lo buscado, despues del campo de datos tendria que haber otro campo https://www.google.com.ar/search?q=cola+en+una+trama+ethernet+II&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjO_KPpoqDUAhVSPJAKHQudBiYQ_AUIBigB&biw=1600&bih=794#imgrc=MEWvNGb3dVuN3Mç, es el campo FCS
+5)el campo data de la trama ethernet son 50 bytes, porque es todo lo que viene despues de la 
+solapa ethernet, hay que sumar todo eso, cada 2 hexas es 1 byte. NO CONFUNDIR CON EL CAMPO DATA
+DE ICMP PORQUE ESO ES OTRA COSA. El tamanio que puede tener el campo datos en una trama ethernet 2 va de 46 a 1500 bytes.
+6)agarro arriba donde dice display filter y pongo
+para niv 3 tcp y dsps ip
+7)niv 4 tcp udp rtp y sctp
+niv 5 http ftp dns 
+
+c. Estudio comparativo de tramas típicas de LAN Ethernet
+Agregue a la captura de tramas Ethernet: IEEE 802.3, las capturas en la red del laboratorio o ejemplos del sitio https://wiki.wireshark.org/ que se correspondan con:
+• IEEE_802.11: IEEE 802.11 wireless LANs
+• STP: IEEE 802.1D Spanning Tree Protocol
+• VLAN: IEEE 802.1Q Virtual Bridged Local Area Networks
+
+
+Realice un estudio comparativo de los 4 tipos de tramas, identificando las funciones particulares de la capa de enlace, qué campos intervienen en cada caso, los procesos que intervienen en el Tx y en el Rx, señalando similitudes y diferencias.
+
+filtro por wlan, stp, vlan
+
+d. Análisis del tráfico ARP
+Realice las siguientes tareas en el intérprete de comandos y capture una o más tramas auxiliándose con el analizador de protocolos:
+1) Observe el estado de la memoria caché de ARP en su PC.
+ponemos cmd click derecho y entramos como administrador, porque si entramos de una como usuario no nos va a dejar hacer el arp -d
+
+C:\>WINDOWS>arp –a
+
+Interfaz: 192.168.3.111 --- 0x6
+  Dirección de Internet          Dirección física      Tipo
+  192.168.2.8           00-0c-29-88-2c-71     dinámico
+  192.168.2.9           00-05-1c-01-c9-27     dinámico
+  192.168.2.10          00-80-5f-6f-16-2e     dinámico
+  192.168.2.11          00-90-27-54-2f-b3     dinámico
+  192.168.2.20          00-21-5a-fe-01-33     dinámico
+  192.168.2.52          70-ca-9b-9a-90-70     dinámico
+  192.168.2.53          28-94-0f-79-e1-00     dinámico
+  192.168.3.69          80-00-0b-dc-9a-38     dinámico
+  192.168.3.255         ff-ff-ff-ff-ff-ff     estático
+  224.0.0.22            01-00-5e-00-00-16     estático
+  224.0.0.251           01-00-5e-00-00-fb     estático
+  224.0.0.252           01-00-5e-00-00-fc     estático
+  239.255.255.250       01-00-5e-7f-ff-fa     estático
+  255.255.255.255       ff-ff-ff-ff-ff-ff     estático
+
+2) Borre la memoria caché de ARP en su PC.
+C:\>WINDOWS>arp -d <dirección IP>
+
+arp -d 192.168.2.8 (una de las que me aparece en la tabla arp)
+
+mi ip = 192.168.3.111
+
+3) Inicie una captura con el Analizador y haga PING a otra PC de la misma LAN. Detenga la captura.
+Responda:
+a) ¿Cuántas PDU intervienen en la resolución ARP?
+filtro arp y estan todas
+b) Describa la secuencia de tramas involucradas, justificando todas las direcciones MAC e IP que aparecen
+c) ¿Cuál es el estado actual de la memoria caché de ARP?
+d) Volver a ejecutar el comando Ping a la misma máquina y observar la secuencia de tramas ARP. ¿Aparecen las mismas tramas ARP? ¿Por qué?
+si hago el ping aparecen las mismas tramas porque la va a buscar, ahora si hago arp -a y dsps arp -d ip y vuelvo a hacer arp -a ahi se borro 
+e) ¿Qué formato tiene una PDU ARP?
+
+leer el libro "comer" udp y tcp los dos capitulos de flujo continuo que esta lo de segmentos y mtu 

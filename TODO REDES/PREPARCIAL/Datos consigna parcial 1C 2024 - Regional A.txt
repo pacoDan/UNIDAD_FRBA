@@ -1,0 +1,14 @@
+Regional: A
+
+(70) 1ra VLAN de negocios: 192.168.170.0/27 (Academica) 
+(80) 2da VLAN de negocios: 192.168.180.0/27 (Investigacion) <--- TUNEL
+(90) VLAN Adm:             192.168.190.0/27 (Administracion)
+DONE
+
+WLAN: modo BRIDGE con 2da VLAN de negocios (80).
+
+En caso de ser necesario, dispone de la siguiente red para acceso de dispositivos móviles a la WLAN: 192.168.96.0/24
+(En este caso no es necesaria por ser Bridge, se usaria para modo Router)
+
+Dirección de Red Acceso WAN: 90.90.90.0/30 
+(de router A a Router 6 (izquierda))

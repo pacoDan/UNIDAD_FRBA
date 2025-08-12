@@ -1,0 +1,25 @@
+direccionamiento
+
+vlan admin 172.19.19.0/26 
+1era VLAN de negocios 172.20.20.0/26
+2da VLAN de negocios: 172.21.21.0/26
+WLAN: modo router con lan IP 194.194.194.0/24
+En caso de ser necsario dispone de la siguiente red para acceso de dispositivos moviles a la WLAN: 192.168.112.0/24
+
+dirección red acceso
+WAN 110.110.110.0/30
+
+ACADEMICA - 
+INVESTIGACION - 
+ADMINISTRACION - 
+
+
+modo bridge otro pkt -vlan2
+router wireless ip 172.21.21.2
+internet setup automatic DHCP
+resto de la configuracion es igual
+
+
+
+
+

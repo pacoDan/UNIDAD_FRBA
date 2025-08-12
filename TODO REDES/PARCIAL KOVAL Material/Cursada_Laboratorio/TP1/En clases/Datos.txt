@@ -1,0 +1,220 @@
+IDF1/2
+ - Las pcs se conectan a los routers a partir de la primera boca Ethernet
+ - La conexión entre el puerto RS232 a la consola del router.
+
+Conexión entre Routers.
+ - Se realiza con cable cruzado (linea negra punteada).
+ - Se empieza desde el último puerto disponible.
+
+
+Configurar los switchs:
+
+ #Comandos disponibles:
+  connect     Open a terminal connection
+  disable     Turn off privileged commands
+  disconnect  Disconnect an existing network connection
+  enable      Turn on privileged commands
+  exit        Exit from the EXEC
+  logout      Exit from the EXEC
+  ping        Send echo messages
+  resume      Resume an active network connection
+  show        Show running system information
+  telnet      Open a telnet connection
+  terminal    Set terminal line parameters
+  traceroute  Trace route to destination
+
+ #Switch#show ?
+  access-lists       List access lists
+  arp                Arp table
+  boot               show boot attributes
+  cdp                CDP information
+  clock              Display the system clock
+  crypto             Encryption module
+  dtp                DTP information
+  etherchannel       EtherChannel information
+  flash:             display information about flash: file system
+  history            Display the session command history
+  hosts              IP domain-name, lookup style, nameservers, and host table
+  interfaces         Interface status and configuration
+  ip                 IP information
+  lldp               LLDP information
+  logging            Show the contents of logging buffers
+  mac                MAC configuration
+  mac-address-table  MAC forwarding table
+  mls                Show MultiLayer Switching information
+  monitor            
+  port-security      Show secure port information
+  privilege          Show current privilege level
+  processes          Active process statistics
+  running-config     Current operating configuration => No está en el modo privilegiado
+--
+
+ #Switch#enable
+ #Switch#show ?
+  access-lists       List access lists
+  arp                Arp table
+  boot               show boot attributes
+  cdp                CDP information
+  clock              Display the system clock
+  crypto             Encryption module
+  dtp                DTP information
+  etherchannel       EtherChannel information
+  flash:             display information about flash: file system
+  history            Display the session command history
+  hosts              IP domain-name, lookup style, nameservers, and host table
+  interfaces         Interface status and configuration
+  ip                 IP information
+  lldp               LLDP information
+  logging            Show the contents of logging buffers
+  mac                MAC configuration
+  mac-address-table  MAC forwarding table
+  mls                Show MultiLayer Switching information
+  monitor            
+  port-security      Show secure port information
+  privilege          Show current privilege level
+  processes          Active process statistics
+
+-- 06 --
+ #Switch#show running-config
+Building configuration...
+
+Current configuration : 994 bytes
+!
+version 12.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Switch
+!
+!
+!
+spanning-tree mode pvst
+!
+interface FastEthernet0/1
+!
+interface FastEthernet0/2
+!
+interface FastEthernet0/3
+!
+interface FastEthernet0/4
+
+-- 07-- => HAY QUE IDENTIFICAR INFORMACIÓN SOBRE LA CAPA 1 Y 2 DEL MODELO OSI.
+
+Switch#show interface
+FastEthernet0/1 is up, line protocol is up (connected)
+  Hardware is Lance, address is 0001.649d.b301 (bia 0001.649d.b301)
+ BW 100000 Kbit, DLY 1000 usec,
+     reliability 255/255, txload 1/255, rxload 1/255
+  Encapsulation ARPA, loopback not set
+  Keepalive set (10 sec)
+  Full-duplex, 100Mb/s
+  input flow-control is off, output flow-control is off
+  ARP type: ARPA, ARP Timeout 04:00:00
+  Last input 00:00:08, output 00:00:05, output hang never
+  Last clearing of "show interface" counters never
+  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0
+  Queueing strategy: fifo
+  Output queue :0/40 (size/max)
+  5 minute input rate 0 bits/sec, 0 packets/sec
+  5 minute output rate 0 bits/sec, 0 packets/sec
+     956 packets input, 193351 bytes, 0 no buffer
+     Received 956 broadcasts, 0 runts, 0 giants, 0 throttles
+     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+     0 watchdog, 0 multicast, 0 pause input
+     0 input packets with dribble condition detected
+     2357 packets output, 263570 bytes, 0 underruns
+
+-- 8 --
+Switch#CONFIGURE TERMINAL
+Enter configuration commands, one per line.  End with CNTL/Z.
+Switch(config)#
+
+-- 9 -- 
+Switch(config)# ?
+
+Configure commands:
+  access-list        Add an access list entry
+  banner             Define a login banner
+  boot               Boot Commands
+  cdp                Global CDP configuration subcommands
+  clock              Configure time-of-day clock
+  crypto             Encryption module
+  do                 To run exec commands in config mode
+  enable             Modify enable password parameters
+  end                Exit from configure mode
+  exit               Exit from configure mode
+  hostname           Set system's network name
+  interface          Select an interface to configure
+  ip                 Global IP configuration subcommands
+  line               Configure a terminal line
+  lldp               Global LLDP configuration subcommands
+  logging            Modify message logging facilities
+  mac                MAC configuration
+  mac-address-table  Configure the MAC address table
+  monitor            
+  no                 Negate a command or set its defaults
+  port-channel       EtherChannel configurationConfigure commands:
+  access-list        Add an access list entry
+  banner             Define a login banner
+  boot               Boot Commands
+  cdp                Global CDP configuration subcommands
+  clock              Configure time-of-day clock
+  crypto             Encryption module
+  do                 To run exec commands in config mode
+  enable             Modify enable password parameters
+  end                Exit from configure mode
+  exit               Exit from configure mode
+  hostname           Set system's network name
+  interface          Select an interface to configure
+  ip                 Global IP configuration subcommands
+  line               Configure a terminal line
+  lldp               Global LLDP configuration subcommands
+  logging            Modify message logging facilities
+  mac                MAC configuration
+  mac-address-table  Configure the MAC address table
+  monitor            
+  no                 Negate a command or set its defaults
+  port-channel       EtherChannel configuration
+
+-- 10 --
+Switch(config)#hostname switch-100
+switch-100(config)#
+
+-- 11 --
+switch-100(config)#enable secret utn
+switch-100(config)#
+
+-- 12 --
+
+switch-100#show running-config
+Building configuration...
+
+Current configuration : 1047 bytes
+!
+version 12.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname switch-100
+!
+enable secret 5 $1$mERr$og3fU2Zrm1u/R/oQwVr8H/
+!
+!
+!
+spanning-tree mode pvst
+!
+interface FastEthernet0/1
+!
+interface FastEthernet0/2
+!
+interface FastEthernet0/3
+ --More-- 
+
+-- 13 -- => COMO DEFINO UN NOMBRE PARA EL ARCHIVO? 
+switch-100#copy running-config start
+Destination filename [startup-config]?  C:/prueba_redes
+%Error copying nvram:C:/prueba_redes (Invalid argument)
+
+

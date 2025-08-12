@@ -1,0 +1,334 @@
+examen--
+varias regionales
+configurar vlan para pcs
+configurar switch 
+pc de administracion
+router configurar en modo bridge o router
+con direccionamientos distintos. 
+enunciado en pdf
+archivo pkt 
+despues hay un cuestionario en el aula. 
+poner respuesta ok. 
+nos da el direccionamiento de vlans y de wan, 
+luego de terminar el parcial, subir al aula virtual el archivo pkt. 
+
+leer todo el enunciado y luego comenzar a hacer el pt, no hacer de punto en punto. 
+
+Regional: A
+
+VLAN Adm: 172.19.19.0/26
+1ra VLAN de negocios: 172.20.20.0/26
+2da VLAN de negocios: 172.21.21.0/26
+WLAN: modo ROUTER con LAN IP 194.194.194.0/24.
+En caso de ser necesario, dispone de la siguiente red para acceso de dispositivos móviles a la WLAN: 192.168.112.0/24 
+
+Dirección de Red Acceso WAN: 110.110.110.0/30
+
+color azul vlan 1 - 20
+color verde vlan 2  21 
+
+192.168.x.x la primera x es para definir el numero de la ip. 
+
+PC 1 - 172.20.20.1 - 0001.C76A.A403 - fa1
+PC 2 - 172.20.20.2 - 0002.1616.8E74 - fa2
+PC 3 - 172.21.21.1 - 000C.85D9.D8C1 - fa1 
+PC 4 - 172.21.21.2 - 00D0.D372.3AEA - fa2 
+
+router acceso1
+configure terminal
+hostname ACCESO1A
+enable secret redes
+
+inter Fa0/1
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 0001.C76A.A403
+switchport port-security violation shutdown
+no shutdown
+exit
+inter Fa0/2
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 0002.1616.8E74
+switchport port-security violation shutdown
+no shutdown
+exit
+
+vlan 20
+name ACADEMICA
+exit
+ 
+vlan 21
+name INVESTIGACION
+exit
+
+inter Fa0/1
+switchport mode access
+switchport access vlan 20
+exit
+ 
+inter Fa0/2
+switchport mode access
+switchport access vlan 21
+exit
+ 
+
+exit
+copy running-config startup-config
+
+
+inter Fa0/24
+switchport mode trunk
+exit
+
+PC 3 - 172.21.21.1 - 000C.85D9.D8C1 - fa1 
+PC 4 - 172.21.21.2 - 00D0.D372.3AEA - fa2 
+
+en router acceso 2
+inter Fa0/1
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 000C.85D9.D8C1
+switchport port-security violation shutdown
+exit
+
+inter Fa0/2
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 00D0.D372.3AEA
+switchport port-security violation shutdown
+exit
+ 
+vlan 20
+name ACADEMICA
+exit
+ 
+vlan 21
+name INVESTIGACION
+exit
+ 
+inter Fa0/1
+switchport mode access
+switchport access vlan 20
+exit
+ 
+inter Fa0/2
+switchport mode access
+switchport access vlan 21
+exit
+ 
+inter Fa0/24
+switchport mode trunk
+exit
+
+----switch de distribucion
+
+fa3/1 - acceso2a
+fa2/1 - acceso1a
+fa0/1 - lapto adm 
+
+laptop 172.19.19.1 - fa0/1 - 0001.97DA.C117
+
+conf terminal
+hostname DISTRIBUCIONA
+enable secret redes
+ 
+vlan 20
+name ACADEMICA
+exit
+vlan 21
+name INVESTIGACION
+exit
+vlan 19
+name ADMINISTRACION
+exit
+
+inter Fa0/1
+switchport mode access
+switchport port-security 
+switchport port-security maximum 1
+switchport port-security mac-address 0001.97DA.C117
+switchport port-security violation shutdown
+exit
+
+inter Fa0/1
+switchport mode access
+switchport access vlan 19
+exit
+inter Fa3/1
+switchport mode trunk
+exit
+
+inter Fa2/1
+switchport mode trunk
+exit
+
+inter Fa1/1
+switchport mode trunk
+exit
+
+exit
+copy running-config startup-config
+
+switch distribucion fa1/1 a routerA fa 0/0
+
+------router A
+4. Router A
+
+en
+conf terminal
+hostname ROUTERA
+enable secret redes
+
+19 - VLAN Adm: 172.19.19.0/26
+20 - 1ra VLAN de negocios: 172.20.20.0/26
+21 - 2da VLAN de negocios: 172.21.21.0/26
+
+Creamos subinterfaces
+
+inter Fa0/0.20
+encapsulation dot1Q 20
+ip address 172.20.20.62 255.255.255.192
+exit
+inter Fa0/0.21
+encapsulation dot1Q 21
+ip address 172.21.21.62 255.255.255.192
+exit
+inter Fa0/0.19
+encapsulation dot1Q 19
+ip address 172.19.19.62 255.255.255.192
+exit
+inter Fa0/0
+no shutdown
+exit
+
+WAN: 110.110.110.0/30
+
+inter Se0/0/0
+ip address 110.110.110.1 255.255.255.252
+no shutdown
+exit
+
+
+Configuramos enrutamiento dinámica mediante eigrp 55
+
+router eigrp 99
+network 172.19.0.0
+network 172.20.0.0
+network 172.21.0.0
+network 110.0.0.0
+redistribute rip metric 125 0 125 125 1500
+no auto-summary
+exit
+
+
+router rip 
+version 2
+redistribute eigrp 99 metric 2
+network 55.0.0.0
+no auto-summary 
+
+19 - VLAN Adm: 172.19.19.0/26
+20 - 1ra VLAN de negocios: 172.20.20.0/26
+21 - 2da VLAN de negocios: 172.21.21.0/26
+
+access-list 103 permit/deny _protocolo _iporigen _wildcard _ipdestino _wildcard
+
+access-list 103 permit ip 172.19.19.0 0.0.0.63 172.19.19.0 0.0.0.63
+access-list 103 permit ip 172.20.20.0 0.0.0.63 172.20.20.0 0.0.0.63
+access-list 103 permit ip 172.21.21.0 0.0.0.63 172.21.21.0 0.0.0.63
+access-list 103 deny ip 172.19.19.0 0.0.0.63 172.20.20.0 0.0.0.63
+access-list 103 deny ip 172.19.19.0 0.0.0.63 172.21.21.0 0.0.0.63
+access-list 103 deny ip 172.20.20.0 0.0.0.63 172.19.19.0 0.0.0.63
+access-list 103 deny ip 172.20.20.0 0.0.0.63 172.21.21.0 0.0.0.63
+access-list 103 deny ip 172.21.21.0 0.0.0.63 172.19.19.0 0.0.0.63
+access-list 103 deny ip 172.21.21.0 0.0.0.63 172.20.20.0 0.0.0.63
+access-list 103 permit ip any any
+
+Asignamos la ACL a las distintas subinterfaces
+
+inter Fa0/1.19
+ip access-group 103 in
+exit
+inter Fa0/1.20
+ip access-group 103 in
+exit
+inter Fa0/1.21
+ip access-group 103 in
+exit
+
+crypto map mapa-a 111 ipsec-isakmp
+set peer 55.55.0.1
+set security-association lifetime seconds 1800
+set transform-set 500
+match address 101
+exit
+
+Activar el túnel en la interfaz serial
+
+
+inter Se0/0/0
+crypto map mapa-a
+exit
+
+
+--------------router 
+gateway 194.194.194.254 , debe ser la ip del router. en la interfaz interna. 
+
+
+5. Router 6
+
+en
+conf terminal
+inter Se0/0/1
+ip address 110.110.110.2 255.255.255.252
+no shutdown
+exit
+router eigrp 99
+network 110.0.0.0
+redistribute rip metric 125 0 125 125 1500
+no auto-summary
+exit
+router rip
+version 2
+redistribute eigrp 99 metric 2
+exit
+
+-----------
+VLAN Adm: 172.19.19.0/26
+1ra VLAN de negocios: 172.20.20.0/26
+2da VLAN de negocios: 172.21.21.0/26
+WLAN: modo ROUTER con LAN IP 194.194.194.0/24.
+En caso de ser necesario, dispone de la siguiente red para acceso de dispositivos móviles a la WLAN: 192.168.112.0/24 
+
+Dirección de Red Acceso WAN: 110.110.110.0/30
+-----------
+router 6 
+crypto isakmp key frba address 110.110.110.1
+Configuración de IPSec modo túnel
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des
+Creamos ACL para el túnel IpSec (VER QUE VLAN TIENE QUE CONECTARSE)
+access-list 101 permit ip host 192.168.100.100 172.21.21.0 0.0.0.63
+access-list 101 permit ip host 192.168.111.111 172.21.21.0 0.0.0.63
+
+Configurar el mapa que determina la IP del extremo remoto del túnel y el tráfico
+de interés que será encapsulado
+
+crypto map mapa-a 111 ipsec-isakmp
+set peer 110.110.110.1
+set security-association lifetime seconds 900
+set transform-set 500
+match address 101
+exit
+Activar el túnel en la interfaz serial
+inter Se0/1/1
+crypto map mapa-a
+exit
+
+
+
+

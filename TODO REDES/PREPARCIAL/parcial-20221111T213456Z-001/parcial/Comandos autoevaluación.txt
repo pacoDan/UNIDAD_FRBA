@@ -1,0 +1,912 @@
+
+
+Comandos autoevaluación
+1.-config VLAN
+----switch----
+enable
+config t
+vlan 77
+name alumnos
+exit
+vlan 88
+name docentes
+exit
+
+2.- conectar los switch
+usar  cable cruzado entre switchs
+usar cable directo pc a Switch
+
+3.-configurar IPs
+en las PCs. 
+
+4.-configurar interfaces switch para vlan
+config t
+interface f0/1
+switchport access vlan 77
+exit
+interface f0/2
+switchport access vlan 88
+exit
+repetir para el otro switch
+
+5.-configurar trunk e/ switchs
+config t
+inter f0/24
+switchport mode trunk 
+exit
+repetir para todos los switchs
+
+6.- verificar comunicación de paquetes entre los PCs. 
+
+7.- conectar red wireless lan
+entre los routers inalambricos
+
+configurar router: 
+Setup/la IP, luego el DHCP: ip y cant de host
+wireless/ el SSID, 
+wireless security/ la clave
+
+8.-configurar equipos wireless
+SSID, clave, protocolo seguridad WPA2-PSK
+luego seleccionar el DHCP para que levante la nueva IP. 
+repetir para todos los equipos. 
+
+9.- config puertos switch a router
+config t
+interface f3/1
+switchport access vlan 88
+exit
+probar comunicación entre pc de la vlan. 
+
+10.-conectar router a router
+si se conecta a internet entonces es modo router (internet)
+si se conecta a otras entonces es modo bridge. (Ethernet)
+fastEthernet 0/1 a Ethernet1
+setup/configurar IP, DHCP
+wireless/SSID
+wireless security/ tipo y clave. 
+router exterior:
+enable
+config t
+inter f0/1
+ip address 192.168.170.2 255.255.255.0
+no shutdown
+exit 
+
+agregar interfaz serial a router
+PHISICAL/ APAGAR EQUIPO
+HWIC-2T , encender equipo 
+
+11.-conectar los dispositivos
+SSID, clave y DHCP
+
+12.-conectar seriales a router externo
+enable
+config t
+inter serial0/1/0
+ip address 5.3.0.1 255.255.255.252
+no shutdown
+encapsulation ppp
+se debe hacer en ambos router la encapsulation 
+
+13.- conectar switch y router (gateway)
+cable directo fastethernet a fastethernet 
+configurar como trunk la conexion
+config t
+int f0/1
+switchport mode trunk
+no shutdown
+exit
+en el router, se debe hacer para cada vlan
+config t
+int f0/0.77
+encapsulation dot1Q 77 
+ip address 192.168.168.33 255.255.255.224
+no shutdown
+exit
+int f0/0.88
+encapsulation dot1Q 88 
+ip address 192.168.168.65 255.255.255.224
+no shutdown
+exit
+int f0/0
+no shutdown
+comprobar envio de paquetes entre las PCs. 
+
+14.- config ruta estatica en router
+config t
+ip route 192.168.180.0 255.255.255.0 192.168.170.1 (este es el gateway del router wireless)
+verificar ping de dispositivos al router
+
+15.- configurar protocolo de enrutamiento rip, desde el router
+conf t
+router rip
+network 5.0.0.0
+network 192.168.168.32
+network 192.168.168.64
+network 192.168.170.0
+redistribute static->comando para que publique las rutas estaticas que ya se tienen configuradas. 
+exit
+probar ping entre equipos. 
+
+16.-configurar tunel entre router que solo sea usado por una vlan, no por la otra. 
+aplicar una access list al tunel para que solo permita el paso de una vlan. 
+wildcard  mascara de subred si es la 255.255.255.224 entonces se hace 255-224 = 31 entonces la wildcard es 0.0.0.31 
+En el router5
+config t
+crypto isakmp key frba address 5.3.0.1
+crypto map mapa-docentes 111 ipsec-isakmp
+set peer 5.3.0.1
+access-list 101 permit ip host 192.168.111.111 192.168.168.64 0.0.0.31
+exit
+se debe aplicar una config similar en el otro router al que esta conectada la red de la sucursal
+config t
+crypto isakmp policy 111
+encr aes 256
+authentication pre-share
+group 5
+lifetime 900 
+crypto isakmp key frba address 5.4.0.2 
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des 
+access-list 101 permit ip 192.168.168.64 0.0.0.31 host 192.168.111.111
+crypto map mapa-docentes 111 ipsec-isakmp 
+set peer 5.4.0.2
+set security-association lifetime seconds 900
+set transform-set 500 
+match address 101
+exit 
+int s0/1/0 
+crypto map mapa-docentes 
+el mapa criptografico se debe hacer en ambos router
+config t 
+int s0/1/0
+crypto map mapa-docentes
+probar ping y ver si hace un salto menos el tracert segun la vlan elegida. 
+
+-----------------------------RESUMEN-------------------------
+show running-config - muestra la configuración activa del switch que se está ejecutando
+show startup-config  - muestra la configuración del switch de la memoria FLASH
+
+definir/cambiar contraseña
+enable
+config t
+enable secret $contraseña
+
+definir/cambiar nombre de host
+enable
+config t
+hostname $name
+
+configurar cantidad de accesos remotos (acceso telnet)
+enable
+config t
+line vty 0 1
+password $contraseña
+login
+exec-timeout $tiempo 
+
+habilitación de puerto (solo en los que se conectan a otros switchs)
+enable
+config t
+interface $num (ej f0/1 )
+switchport mode trunk
+
+creacion vlan
+enable
+config t
+vlan $numero (ej 10)
+name $nombre (ej marketing)
+
+asignacion vlan
+interface $numinterface (ej f0/1)
+switchport mode access
+switchport access vlan $num 
+
+para guardar tu config en el router
+copy running-config startup-config (equivalente a do wr)
+
+configurar subinterfaces
+enable
+config t
+interface fastEthernet 0/0 (interfaz madre)
+no shutdown (para encenderla)
+exit
+interface FastEthernet 0/0/xx (numero de la interfaz)
+encapsulation dot1q xx (numero de la vlan)
+ip address n.n.n.n m.m.m.m (ip default gateway, mascara)
+no shutdown
+
+-------------------------RESUMEN LABS---------------------
+Acceso TELNET
+conectar la PC al switch o router con cable consola, es el de color azul, va en el puerto de consola del dispositivo. 
+luego se va a la PC a Desktop / Terminal y ya se tiene acceso al switch o router. 
+
+guardar configuracion
+do wr
+copy running-config startup-config
+
+configurar cantidad de accesos remotos (acceso telnet)
+enable
+config t
+line vty 0 1
+password $pass
+login
+exec-timeout $tiempoMinySeg (ej 1 30)
+
+Seleccionar varias interfaces
+interface range f0/1-24
+
+Seguridad de puerto
+para que el puerto se conecte a una PC con una MAC específica. 
+config t
+interface fa 0/1
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address $mac (ej 00D0.FF8B.2C7E)
+switchport port-security violation shutdown
+
+asignar puertos de las PC a la vlan
+config t
+switchport access vlan $num (ej 10)
+
+configuración de los switch troncales, para que pasen las vlan creadas. 
+entrar en la interfaz y luego
+switchport mode trunk
+
+
+configuracion del spanning-tree -> es un triangulo de switchs donde hay doble cables entre cada uno de ellos, entonces entre dos  con el principal debe ser activo (comparten el mismo channel-group ) y entre los dos ultimo pasivo (comparten el mismo channel-group, de un switch al otro es pasivo y del otro hacia el anterior es activo, es decir se pone pasivo solo en un camino ).
+En el switch que queremos que sea el principal 
+spanning-tree vlan 1,10,20 root primary  (ej 1,10,20 son los # de vlans, la 1 es por defecto)
+port-channel load-balance dst-mac
+interface range gig0/1, gig1/1
+shutdown
+channel-protocol LACP
+channel-group 1 mode active
+no shutdown
+exit
+interface port-channel 1
+switchport mode trunk
+switchport trunk allowed vlan all
+exit
+do copy running-config startup-config
+interface range gig2/1, gig3/1
+shutdown
+channel-protocol LACP
+channel-group 2 mode active
+no shutdown
+exit
+interface port-channel 2
+switchport mode trunk
+switchport trunk allowed vlan all
+exit
+do copy running-config startup-config
+
+
+Configure una dirección IP de administración en la VLAN 1 dentro de
+la red 192.168.1.0/24 y active la interfaz.
+interface vlan 1
+ip address 192.168.1.251 255.255.255.0
+no shutdown
+exit
+
+
+configuracion SSH versión 2.0 para
+UN SOLO USUARIO REMOTO.
+a) Configuración de nombre de dominio
+NUCLEO(config)#ip domain-name tl1.com
+b) Generación de Claves RSA
+NUCLEO(config)#crypto key generate rsa
+c) Cambiar SSH versión 1 a la versión 2
+NUCLEO(config)#ip ssh version 2
+d) Configuración de Line VTY para un solo usuario
+NUCLEO(config)#line vty 0
+NUCLEO(config-line)#transport input ssh
+NUCLEO(config-line)#login local
+e) Crear nombre de usuario ´redes´ con el nivel de privilegio más alto (15)
+y contraseña ´cisco´.
+NUCLEO(config)# username redes privilege 15 password cisco
+f) Habilitar una nueva contraseña para modo privilegiado ´cisco123´
+NUCLEO(config)#enable secret cisco123
+
+line vty 0
+transport input ssh
+login local
+username redes privilege 15 password cisco
+exit
+enable secret cisco123
+
+
+desde la PC se puede acceder Desktop/Telnet/SSH Client. 
+
+Desactivación de TELNET
+NUCLEO(config)#line vty 1 15
+NUCLEO(config-line)#no transport input
+NUCLEO(config-line)#transport input ssh
+
+conectarse al router desde la PC
+ir a Desktop/ web browser 
+http://192.168.1.1 
+user:admin
+pasword:admin 
+de esta forma se entra al router. 
+
+Configure la opción de acceso remoto para el modo SSH versión 2.0 para UN
+SOLO USUARIO REMOTO, por similitud al TL1.
+remotox(config)#ip domain-name tl3.com
+remotox(config)#crypto key generate rsa [defina 2048 bits de longitud de clave1
+]
+remotox(config)#ip ssh version 2
+remotox(config)#line vty 0
+remotox(config-line)#transport input ssh
+remotox(config-line)#login local
+remotox(config)# username redes privilege 15 password cisco
+
+)Desactive el acceso remoto en las restantes líneas Vty.
+remotox(config)# line vty 1 15
+remotox(config-line)# transport input none
+remotox(config-line)# exit
+11)Configure la interface fastEthernet, asignándole una dirección ip y levantando la
+interface
+remotox(config)# interface fastEthernet 0/0
+remotox(config-if)# ip address <IP> <máscara>
+remotox(config-if)# no shutdown
+remotox(config-if)# exit
+12)Configure la interfaz serial 0/0, asignándole una dirección IP (la velocidad de reloj
+sólo en el router con el cable DCE) y levantar la interfaz.
+remotox(config)# interface serial 0/0
+remotox(config-if)# encapsulation ppp
+remotox(config-if)# ip address <IP> <máscara>
+remotox(config-if)# clock rate 2000000
+remotox(config-if)# no shutdown
+remotox(config-if)# exit
+
+Configuración de enrutamiento dinámico
+remotox(config)# router rip
+remotox(config-router)# version 2
+remotox(config-router)# network w.x.y.z (1)
+remotox(config-router)# network w.x.y.z
+remotox(config-router)# exit
+
+
+Comandos para revisar configuraciones
+show running-config
+show startup-config
+show interface
+show vlan
+show spanning-tree summary
+show spanning-tree active
+show spanning-tree detail
+show ip route
+show ip protocol
+show access-lists
+
+-------------------------------------
+comandos simula
+VLAN Adm:172.16.16.0/26
+VLAN 1:172.17.17.0/26 
+VLAN 2:172.18.18.0/26
+/26 = 255.255.255.192
+Direccion de Red Acceso WAN: 30.30.30.0/30
+/30 = 255.255.255.252
+
+1.-dan las IPs de las VLANs
+2.-asignar ips a los dispositivos
+3. Configuro Switches
+Switch Acceso 1
+
+en
+configure terminal
+hostname ACCESO1A
+enable secret redes
+
+inter Fa0/1
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 0001.C76A.A403
+switchport port-security violation shutdown
+no shutdown
+exit
+
+inter Fa0/2
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 000C.85D9.D8C1
+switchport port-security violation shutdown
+no shutdown
+exit
+
+vlan 10
+name ACADEMICA
+exit
+ 
+vlan 20
+name INVESTIGACION
+exit
+
+inter Fa0/1
+switchport mode access
+switchport access vlan 10
+exit
+ 
+inter Fa0/2
+switchport mode access
+switchport access vlan 20
+exit
+ 
+inter Fa0/3
+switchport mode trunk
+exit
+
+exit
+copy running-config startup-config
+
+Switch Acceso 2
+
+en
+configure terminal
+hostname ACCESO2A
+enable secret redes
+ 
+inter Fa0/1
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 0002.1616.8E74
+switchport port-security violation shutdown
+exit
+ 
+inter Fa0/2
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security mac-address 00D0.D372.3AEA
+switchport port-security violation shutdown
+exit
+ 
+vlan 10
+name ACADEMICA
+exit
+ 
+vlan 20
+name INVESTIGACION
+exit
+ 
+inter Fa0/1
+switchport mode access
+switchport access vlan 10
+exit
+ 
+inter Fa0/2
+switchport mode access
+switchport access vlan 20
+exit
+ 
+inter Fa0/3
+switchport mode trunk
+exit
+
+exit 
+copy running-config startup-config
+
+Switch Distribución
+
+en
+conf terminal
+hostname DISTRIBUCIONA
+enable secret redes
+ 
+vlan 10
+name ACADEMICA
+exit
+ 
+vlan 20
+name INVESTIGACION
+exit
+ 
+vlan 30
+name ADMINISTRACION
+exit
+
+inter Fa2/1
+switchport mode access
+switchport port-security 
+switchport port-security maximum 1
+switchport port-security mac-address 0001.97DA.C117
+switchport port-security violation shutdown
+exit
+
+inter Fa2/1
+switchport mode access
+switchport access vlan 30
+exit
+
+inter Fa0/1
+switchport mode trunk
+exit
+
+inter Fa1/1
+switchport mode trunk
+exit
+
+inter Fa3/1
+switchport mode trunk
+exit
+
+exit
+copy running-config startup-config
+-------------------------
+
+VLAN Adm:172.16.16.0/26
+VLAN 1:172.17.17.0/26 
+VLAN 2:172.18.18.0/26
+/26 = 255.255.255.192
+Direccion de Red Acceso WAN: 30.30.30.0/30
+/30 = 255.255.255.252
+
+4. Router A
+
+en
+conf terminal
+hostname ROUTERA
+enable secret redes
+
+Creamos subinterfaces
+
+inter Fa0/1.10
+encapsulation dot1Q 10
+ip address 172.17.17.62 255.255.255.192
+exit
+
+inter Fa0/1.20
+encapsulation dot1Q 20
+ip address 172.18.18.62 255.255.255.192
+exit
+
+inter Fa0/1.30
+encapsulation dot1Q 30
+ip address 172.16.16.62 255.255.255.192
+exit
+
+inter Fa0/1
+no shutdown
+exit
+
+inter Se0/0/0
+ip address 30.30.30.1 255.255.255.252
+no shutdown
+exit
+
+
+Configuramos enrutamiento dinámica mediante eigrp 55
+
+router eigrp 99
+network 172.16.0.0
+network 172.17.0.0
+network 172.18.0.0
+network 30.0.0.0
+redistribute rip metric 125 0 125 125 1500
+no auto-summary
+exit
+
+router eigrp 99
+redistribute rip metric 125 0 125 125 1500
+network 20.0.0.0
+no auto-summary
+
+router rip 
+version 2
+redistribute eigrp 99 metric 2
+network 55.0.0.0
+no auto-summary 
+
+Generamos los filtros de paquetes con ACL entre Vlans
+
+access-list 103 permit/deny _protocolo _iporigen _wildcard _ipdestino _wildcard
+
+access-list 103 permit ip 172.16.16.0 0.0.0.63 172.16.16.0 0.0.0.63
+access-list 103 permit ip 172.17.17.0 0.0.0.63 172.17.17.0 0.0.0.63
+access-list 103 permit ip 172.18.18.0 0.0.0.63 172.18.18.0 0.0.0.63
+
+access-list 103 deny ip 172.16.16.0 0.0.0.63 172.17.17.0 0.0.0.63
+access-list 103 deny ip 172.16.16.0 0.0.0.63 172.18.18.0 0.0.0.63
+access-list 103 deny ip 172.17.17.0 0.0.0.63 172.16.16.0 0.0.0.63
+access-list 103 deny ip 172.17.17.0 0.0.0.63 172.18.18.0 0.0.0.63
+access-list 103 deny ip 172.18.18.0 0.0.0.63 172.16.16.0 0.0.0.63
+access-list 103 deny ip 172.18.18.0 0.0.0.63 172.17.17.0 0.0.0.63
+
+access-list 103 permit ip any any
+
+Asignamos la ACL a las distintas subinterfaces
+
+inter Fa0/1.10
+ip access-group 103 in
+exit
+
+inter Fa0/1.20
+ip access-group 103 in
+exit
+
+inter Fa0/1.30
+ip access-group 103 in
+exit
+
+Verificación de que están las acces lists
+Configuración de IKE (túnel del router A al 5)
+crypto isakmp policy 111
+encr aes 256
+authentication pre-share
+group 5
+lifetime 900
+exit
+
+Definición de una clave simétrica con el otro extremo del túnel
+crypto isakmp key frba address 55.55.0.1
+Configuración de IPSec modo túnel
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des
+Creamos ACL para el túnel IpSec (VER QUE VLAN TIENE QUE CONECTARSE)
+access-list 101 permit ip 172.18.18.0 0.0.0.63 host 192.168.100.100
+access-list 101 permit ip 172.18.18.0 0.0.0.63 host 192.168.111.111
+
+Configurar el mapa que determina la IP del extremo remoto del túnel y el tráfico
+de interés que será encapsulado
+
+crypto map mapa-a 111 ipsec-isakmp
+set peer 55.55.0.1
+set security-association lifetime seconds 1800
+set transform-set 500
+match address 101
+exit
+Activar el túnel en la interfaz serial
+inter Se0/0/0
+crypto map mapa-a
+exit
+
+5. Router 6
+
+VLAN Adm:172.16.16.0/26
+VLAN 1:172.17.17.0/26 
+VLAN 2:172.18.18.0/26
+/26 = 255.255.255.192
+Direccion de Red Acceso WAN: 30.30.30.0/30
+/30 = 255.255.255.252
+
+
+en
+conf terminal
+inter Se0/0/1
+ip address 30.30.30.2 255.255.255.252
+no shutdown
+exit
+
+router eigrp 99
+network 30.0.0.0
+redistribute rip metric 125 0 125 125 1500
+no auto-summary
+exit
+
+router rip
+version 2
+redistribute eigrp 99 metric 2
+exit
+
+6. Router 5
+
+Configuración de IKE
+en
+conf t
+crypto isakmp policy 111
+encr aes 256
+authentication pre-share
+group 5
+lifetime 900
+exit
+
+VLAN Adm:172.16.16.0/26
+VLAN 1:172.17.17.0/26 
+VLAN 2:172.18.18.0/26
+/26 = 255.255.255.192
+Direccion de Red Acceso WAN: 30.30.30.0/30
+/30 = 255.255.255.252
+
+
+Definición de una clave simétrica con el otro extremo del túnel
+
+crypto isakmp key frba address 30.30.30.1
+Configuración de IPSec modo túnel
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des
+Creamos ACL para el túnel IpSec (VER QUE VLAN TIENE QUE CONECTARSE)
+access-list 101 permit ip host 192.168.100.100 172.18.18.0 0.0.0.63
+access-list 101 permit ip host 192.168.111.111 172.18.18.0 0.0.0.63
+Configurar el mapa que determina la IP del extremo remoto del túnel y el tráfico
+de interés que será encapsulado
+
+crypto map mapa-a 111 ipsec-isakmp
+set peer 30.30.30.1
+set security-association lifetime seconds 900
+set transform-set 500
+match address 101
+exit
+Activar el túnel en la interfaz serial
+inter Se0/1/1
+crypto map mapa-a
+exit
+
+---------------------COMANDOS-------------------------------
+show running-config  - Muestra la configuración activa del switch que se está ejecutando en RAM
+ show startup-config – Muestra la configuración del switch de la memoria FLASH
+Cambiar contraseña 
+enable
+configure terminal
+enable secret $password
+
+Cambiar nombre de host
+enable
+configure terminal
+hostname $name
+
+Configurar cantidad de accesos remotos (acceso telnet)
+enable
+configure terminal
+line vty 0 1
+password $password
+login
+exec-timeout $tiempo
+
+Habilitación de puerto (Solo en los que se conectan a otros switchs) :
+enable
+configure terminal
+interface $numerointerface  (ej, f0/1 / interface fastEthernet 0/1 )
+switchport mode trunk
+
+Creación Vlan
+enable
+configure terminal
+vlan $número (ej 10)
+name $elnombresito (ej marketing)
+
+Asignación Vlan 
+interface $numerointerface 
+switchport mode access
+switchport access vlan $numero
+
+Para guardar tu config en el router
+copy running-config startup-config 
+
+Configurar SubInterfaces
+enable
+configure terminal
+interface FastEthernet 0/0 (la interfaz madre)
+no shutdown (hay que prenderla)
+exit
+interface FastEthernet 0/0.xx (este xx es el numerito de subinterfaz)
+encapsulation dot1q xx (xx numero de la vlan)
+ip address n.n.n.n m.m.m.m (ip default gateway, mascara)
+no shutdown
+
+
+Configurar routers (Ruta estatica)
+configure terminal
+ip route x.x.x.x m.m.m.m Se0/1/0 (la ip hacia donde vas, la mascara de esta ip y la interfaz por donde salis)
+exit
+
+Configurar routers (Configuración de puertos ethernet)
+enable
+configure terminal
+interface $numeroDePuerto (ej Se2/0)
+encapsulation ppp *Cada vez que conectes seriales va encapsulamiento ppp entre routers*
+ip address  x.x.x.x m.m.m.m
+no shutdown
+exit *para salir de la interfaz*
+interface $numeroDePuerto (ej  fastEthernet 0/0)
+ip address  x.x.x.x m.m.m.m
+no shutdown
+
+Configurar routers (Configuracion de seriales)
+interface serial x/0
+encapsulation ppp 
+ip address x.x.x.x m.m.m.m
+clock rate 64000 *Esto va en cables DCE, en el cable rojo donde esta el reolojito*
+no shutdown 
+exit 
+
+
+Configurar routers (Configuración de enrutamiento dinamico)
+configure terminal
+router rip / router eigrp 99 (el 99 es el numero de id)
+version 2 / en eigrp no hace falta poner esto
+network x.x.x.x (el identificador de la red, ej 192.168.1.0)
+network x.x.x.x (pones todas las ips que tenes)
+passive-interface f0/0 (matar que crezca la tabla de routeo, es para cuando sabes que no pones nuevas pcs) NO USAR
+no auto-summary (bajarle al protocolo rip que no haga sumarizacion)
+exit 
+
+Configurar routers (Configuración de RIP en convivencia con eigrp)
+configure terminal
+router rip
+redistribute eigrp 99 metric 2 ( * rip usa saltos)
+exit
+
+Configurar routers (Configuración de eigrp en convivencia con RIP)
+configure terminal
+router eigrp 99
+redistribute rip metric 125 125 125 125 1500 ( ** eigrp usa 5 parametros diferentes)
+exit
+
+* cada protocolo, usa su propia metrica, la metrica de eigrp usa unos parametros y rip usa otros, rip usa hasta 15 saltos.
+
+** cada protocolo, usa su propia metrica, la metrica de eigrp usa unos parametros y rip usa otros, eirgp usa como 5 cosas
+
+Aplicar rutas de acceso
+Router3(config)#access-list 199 permit ip 192.168.168.129 0.0.0.0 192.168.100.100 0.0.0.0
+Router3(config)#inter
+Router3(config)#interface Fa0/0.99
+Router3(config-subif)#ip acc
+Router3(config-subif)#ip access-group 199 in
+
+
+Tuneleo
+
+Router 1
+enable
+conf terminal
+
+crypto isakmp policy 10 (10 es el id)
+encr aes
+authentication pre-share
+group 5
+lifetime 3600 (este numero te lo da, tiempo de timeout pa que te respondan)
+exit
+crypto isakmp key cisco address 55.55.0.1 (cisco es la pass, lo pones vos. 55.55.0.1 ip de la interfaz por donde llega el tunel en el router destino)
+crypto ipsec transform-set 50 ah-sha-hmac esp-3des (el 50 es un id que se puede cambiar)
+crypto map mymap 10 ipsec-isakmp (mymap seria un nombre para tunel, lo pones vos, el 10 esta relacionado con el id 10 del crypto isakmp, tiene que ser el mismo)
+set peer 55.55.0.1 (hacia donde te conectas, la misma ip que habias puesto antes)
+set security-association lifetime seconds 1800 (otro timeout, el 1800 lo pones vos)
+set transform-set 50 (el 50 es el mismo id del transform-set 50 )
+match address 101 (el 101 el id de la access list que vos creas)
+exit (aca terminaste el tunel)
+interface Serial0/0/0
+crypto map mymap (aca asignas el tunel a la interfaz de donde salis, le pones el nombre del tunel)
+no shutdown
+exit
+access-list 101 permit ip xo.xo.xo.xo mo.mo.mo.mo yd.yd.yd.yd md.md.md.dm (101 es el id, permit  es la accion de la lista, xo es la ip origen mo es la mascara inversa origen, y yd es el ip destino md es mascara inversa destino)
+
+La vuelta es practicamente lo mismo, pero cambias:
+-	crypto isakmp key cisco address 55.0.0.5 (contraseña igual, ojo, ip la de la interfaz del otro router)
+-	set peer 55.0.0.5 (la ip del otro router)
+-	interface Serial0/1/1 (el serial por el que salgas)
+-	access-list 101 permit ip 192.168.100.100 0.0.0.0 55.77.11.0 0.0.0.255 (donde antes tenias origen ahora es destino y viceversa)
+
+Router 5
+
+	en
+	conf t
+
+	crypto isakmp policy 10
+	encr aes
+	authentication pre-share
+	group 5
+	lifetime 3600
+
+	crypto isakmp key cisco address 55.0.0.5
+
+	crypto ipsec transform-set 50 ah-sha-hmac esp-3des
+
+	crypto map mymap 10 ipsec-isakmp 
+	set peer 55.0.0.5
+	set security-association lifetime seconds 1800
+	set transform-set 50
+	match address 101
+	 
+	interface Serial0/1/1
+	crypto map mymap
+	no shutdown
+
+	access-list 101 permit ip 192.168.100.100 0.0.0.0 55.77.11.0 0.0.0.255
+
+
+
+
+***** ******* *********** ********************* ****************************************************** * **
+

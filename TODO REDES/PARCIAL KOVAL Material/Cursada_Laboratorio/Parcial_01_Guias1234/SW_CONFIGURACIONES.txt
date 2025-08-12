@@ -1,0 +1,47 @@
+#SW - ASINGAR NOMBRE
+Enable
+Config t
+Hostname [NAME]
+Enable secret redes
+exit
+
+#SW - HABILITAR TelneT
+Enable
+Config t
+redes
+Line vty 0 1
+Password utn
+Login 
+exit
+
+#SW - CREAR LAS VLANS (en todos los SW)
+Enable
+Config t
+redes
+Vlan 10
+Name ALUMNOS
+Exit
+Vlan 20
+Name DOCENTES
+Exit
+Vlan 30
+Name ADMIN
+Exit
+
+#SW_PUERTOS CONECTADOS A PC -- ASIGNAR VLANS
+Enable
+Config t
+Interface F0/1
+Switch port mode Access
+Switch port Access vlan [Nro_Vlan]
+
+#SW_PUERTOS CONECTADOS A SW -- configurar modo TRUNK
+Enable
+Config t
+Int f0/1
+Switchport mode trunk
+exit
+Copy run start
+
+
+

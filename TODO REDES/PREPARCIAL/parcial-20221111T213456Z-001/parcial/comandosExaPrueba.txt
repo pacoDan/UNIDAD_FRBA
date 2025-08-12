@@ -1,0 +1,486 @@
+conexion vlans pcs y switchs
+ACCESO 1A
+enable
+config t
+vlan 20
+name ACADEMICA
+exit
+vlan 21
+name INVESTIGACION
+EXIT
+
+config t
+inter f0/1
+switchport acces vlan 20
+exit
+inter f0/2
+switchport acces vlan 21
+exit
+
+inter f0/24
+switchport mode trunk
+exit
+
+ACCESO 2A
+config t
+vlan 20
+name ACADEMICA
+exit
+vlan 21
+name INVESTIGACION
+EXIT
+
+config t
+inter f0/1
+switchport acces vlan 20
+exit
+inter f0/2
+switchport acces vlan 21
+exit
+
+inter f0/24
+switchport mode trunk
+exit
+
+
+DISTRIBUCION
+config t
+vlan 20
+name ACADEMICA
+exit
+vlan 21
+name INVESTIGACION
+EXIT
+
+inter f1/1
+switchport mode trunk
+exit
+inter f2/1
+switchport mode trunk
+exit
+
+probar conexion, se debe ser ping exitoso entre las pcs de la misma vlan. 
+
+-----------------modo router------------------------
+conexion wifi
+conectar router fa0/1(el de borde) a internet del router wireless. 
+
+entrar al router a la interfaz
+Internet Setup:
+internet coneccion type:static ip
+IP address: 194.194.194.2
+mascara 255.255.255.224
+dg: 194.194.194.1 (es la ip que se le pondra al puerto que se conecta con el router de borde)
+Network Setup:
+router IP:
+192.168.112.1
+DHCP server settings: 
+Start IP address: 192.168.112.2
+Maximum number of user:14 
+guardar
+wireless/basic wireless settings:
+Network Name SSID:routerA
+guardar
+wireless/wireless security:
+Security Mode: WAP2 Personal
+encryption:AES
+passphrase:FR84.U7n
+guardar
+
+ir al equipo
+config/wireless0:
+SSID:routerA
+PSK Pass phrase:FR84.U7n
+WAP2-PSK esta marcado. 
+
+IP configuration:
+marcar DHCP y esperar a que tome la ip
+
+194.194.194.1
+
+conectar a router de borde con cable cruzado
+router de borde. 
+config t 
+inter fa0/1
+ip address 194.194.194.1 255.255.255.0
+exit
+inter fa0/1
+no shutdown
+exit
+-----------------modo bridge------------------------
+modo bridge otro pkt -vlan2 que es la 21
+internet setup: PPPoE
+network setup:
+disabled
+resto de la configuracion es igual y se hace lo mismo en el celular. 
+debería conectarlo al fa0/1 del router de borde
+y en la sección de internet setup ponerle la configuración de static ip y repetir configuración que hice antes. 
+
+switch de distribucion gig6/1 conectado al router wireless
+enable
+config t
+inter gig6/1
+switchport access vlan 21
+exit
+do wr
+
+
+
+----------------------------------------
+conectar Router de borde con router externo mediante serial DCE, comenzar en el router externo (s0/1/1) hacia el de borde(s0/1/1). asi el reloj queda en el router externo (s0/1/1). 
+
+router de borde
+enable
+redes
+config t
+inter s0/1/1
+ip address 110.110.110.1 255.255.255.252
+no shutdown
+encapsulation ppp 
+exit
+
+router externo (router 6)
+enable
+redes
+config t
+inter s0/1/1
+ip address 110.110.110.2 255.255.255.252
+encapsulation ppp 
+clock rate 2000000
+no shutdown
+exit
+
+probar ping entre los routers debe ser exitoso. 
+show run ->para ver las configuraciones
+
+conectar laptop a switch distribución
+cable directo
+configurar IP statica para laptop
+172.19.19.2 /26
+dg: 172.19.19.1
+
+switch distribución
+enable
+config t
+vlan 19
+name ADMINISTRACION
+exit
+inter f3/1
+switchport acces vlan 19
+exit
+
+conectar router borde y switch distribución, cable directo
+router fa0/0
+switch distribucion fa0/1
+
+switch distribucion
+enable
+config t
+inter f0/1
+switchport mode trunk 
+no shutdown
+exit
+
+router de borde config subinterfaces
+enable
+config t
+inter f0/0.19
+encapsulation dot1Q 19
+ip address 172.19.19.1 255.255.255.192
+exit
+inter f0/0.20
+encapsulation dot1Q 20
+ip address 172.20.20.1 255.255.255.192
+exit
+inter f0/0.21
+encapsulation dot1Q 21
+ip address 172.21.21.1 255.255.255.192
+exit
+inter Fa0/0
+no shutdown
+exit
+
+probar ping desde cada vlan al router de borde y desde el celular al router de borde, deben ser exitosos. 
+
+configurar ruta estatica, en el router de borde, para que se pueda hacer ping desde el router de borde al celular
+config t
+ip route 192.168.112.0 255.255.255.0 194.194.194.2
+
+configurar rip en el router de borde
+enable 
+sh ip route
+config t
+router eigrp 99 
+network 110.110.110.0
+network 172.19.19.0
+network 172.20.20.0
+network 172.21.21.0
+network 194.194.194.0
+redistribute static 
+redistribute rip metric 125 0 125 125 1500 
+no auto-summary
+exit
+
+sh ip route
+
+en el router externo, num 6
+config t
+router eigrp 99 
+network 110.110.110.0
+network 172.19.19.0
+network 172.20.20.0
+network 172.21.21.0
+network 194.194.194.0
+redistribute rip metric 125 0 125 125 1500 
+no auto-summary
+exit
+
+necesitamos que rip redistribuya el eigrp a los otros routers
+
+router rip
+redistribute eigrp 99 metric 2
+network 55.0.0.0 (es la red WAN, los routers externos, todos. )
+no auto-summary
+exit
+
+probar pings desde las PCs, telefono y laptop a los servidores del rectorado, deben se exitosos.
+
+configurar ACL
+en el router de borde se debe permitir el paso solamente a la red de la VLAN
+y denegar el paso a de una red de vlan a las otras vlans. Se deben aplicar a las subinterfaces
+Se debe permitir la salida de los dipositivos del router wireless, hacia los hosts de los servidores 
+configurar en router borde de regional
+access-list 103 permit ip 172.20.20.0 0.0.0.63 172.20.20.0 0.0.0.63
+access-list 103 permit ip 172.21.21.0 0.0.0.63 172.21.21.0 0.0.0.63
+access-list 103 permit ip 172.19.19.0 0.0.0.63 172.19.19.0 0.0.0.63
+access-list 103 deny ip 172.20.20.0 0.0.0.63 172.21.21.0 0.0.0.63
+access-list 103 deny ip 172.20.20.0 0.0.0.63 172.19.19.0 0.0.0.63
+access-list 103 deny ip 172.21.21.0 0.0.0.63  172.20.20.0 0.0.0.63
+access-list 103 deny ip 172.21.21.0 0.0.0.63 172.19.19.0 0.0.0.63
+access-list 103 deny ip 172.19.19.0 0.0.0.63 172.20.20.0 0.0.0.63
+access-list 103 deny ip 172.19.19.0 0.0.0.63 172.21.21.0 0.0.0.63
+
+--no funcionó, da acceso completo
+access-list 103 permit ip 194.194.194.0 0.0.0.255 192.168.111.0 0.0.0.255
+access-list 103 permit ip 192.168.112.0 0.0.0.255 192.168.111.0 0.0.0.255
+
+aplicar a las subinterfaces
+inter Fa0/0.19
+ip access-group 103 in
+exit
+inter Fa0/0.20
+ip access-group 103 in
+exit
+inter Fa0/0.21
+ip access-group 103 in
+exit
+
+
+
+posible
+access-list 103 permit ip 192.168.112.0 0.0.0.255 host 192.168.111.111
+access-list 103 permit ip 192.168.112.0 0.0.0.255 host 192.168.100.100
+
+
+
+configurar tunel
+entre los router de borde de la regional y el router de borde del rectorado
+
+
+--posible---
+Configuración de IKE (túnel del router A al 5)
+crypto isakmp policy 111
+encr aes 256
+authentication pre-share
+group 5
+lifetime 900
+exit
+
+En router A,Definición de una clave simétrica con el otro extremo del túnel
+crypto isakmp key frba address 55.55.0.1(dirección de la interfaz serial del otro extremo del tunel)
+
+Configuración de IPSec modo túnel
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des
+Creamos ACL para el túnel IpSec (VER QUE VLAN TIENE QUE CONECTARSE)
+access-list 101 permit ip 172.21.21.0 0.0.0.63 host 192.168.100.100
+access-list 101 permit ip 172.21.21.0 0.0.0.63 host 192.168.111.111
+
+En el router A, Configurar el mapa que determina la IP del extremo remoto del túnel y el tráfico de interés que será encapsulado
+
+crypto map mapa-a 111 ipsec-isakmp
+set peer 55.55.0.1
+set security-association lifetime seconds 1800
+set transform-set 500
+match address 101
+exit
+
+Activar el túnel en la interfaz serial
+inter Se0/0/0
+crypto map mapa-a
+exit
+
+Esto es entre el ROUTER A y el ROUTER 6 para que puedan conectarse, el DCE es el router 6
+Router 6
+en
+conf terminal
+inter Se0/0/1
+ip address 30.30.30.2 255.255.255.252
+no shutdown
+exit
+
+router eigrp 99
+network 30.0.0.0
+redistribute rip metric 125 0 125 125 1500
+no auto-summary
+exit
+
+router rip
+version 2
+redistribute eigrp 99 metric 2
+exit
+
+Router 5
+Configuración de IKE
+en
+conf t
+crypto isakmp policy 111
+encr aes 256
+authentication pre-share
+group 5
+lifetime 900
+exit
+
+Definición de una clave simétrica con el otro extremo del túnel
+crypto isakmp key frba address 30.30.30.1 (usar Serial correspondiente del rouer A en este caso. Misma que en la set peer, extremo del tunel)
+
+
+Configuración de IPSec modo túnel
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des
+
+Creamos ACL para el túnel IpSec (VER QUE VLAN TIENE QUE CONECTARSE)
+access-list 101 permit ip host 192.168.100.100 172.21.21.0 0.0.0.63
+access-list 101 permit ip host 192.168.111.111 172.21.21.0 0.0.0.63
+
+Configurar el mapa que determina la IP del extremo remoto del túnel y el tráfico de interés que será encapsulado
+se hace en el Serial correspondiente del rouer A en este caso. Misma que en la set peer, extremo del tunel
+crypto map mapa-a 111 ipsec-isakmp
+set peer 30.30.30.1
+set security-association lifetime seconds 900
+set transform-set 500
+match address 101
+exit
+
+Activar el túnel en la interfaz serial
+inter Se0/1/1
+crypto map mapa-a
+exit
+---------------------------
+
+definir el tunel
+1.-ver la configuracion de tunel del router 5 
+enable
+sh run
+ me copio en txt 
+ crypto isakmp key frba address 5.3.0.1
+ 
+crypto map mapa-docentes 111 ipseec-isakmp
+set peer 5.3.0.1
+access-list 101 permit ip host 192.168.111.111 192.168.1.0 0.0.0.255
+ se deberá crear una ACL para que se use en el tunel. 
+ 
+ en mi caso esto es lo que esta mal:
+ crypto isakmp key frba address 10.10.10.1
+crypto isakmp key frba address 20.20.20.1
+crypto isakmp key frba address 30.30.30.1
+
+crypto map mapa-a 111 ipsec-isakmp 
+set peer 10.10.10.1
+set peer 20.20.20.1
+set peer 30.30.30.1
+ 
+access-list 101 permit ip host 192.168.111.111 192.168.170.0 0.0.0.31
+
+2.-modifico lo que copie del router 5
+crypto isakmp key frba address 55.55.0.1
+
+crypto map mapa-a 111 ipsec-isakmp 
+set peer 55.55.0.1
+
+access-list 101 permit ip host 192.168.111.111 172.21.21.0 0.0.0.63
+access-list 101 permit ip host 192.168.100.100 172.21.21.0 0.0.0.63
+
+3.- modificar en router 5
+enable
+config t
+crypto isakmp key frba address 55.55.0.1
+crypto map mapa-a 111 ipsec-isakmp 
+set peer 55.55.0.1
+access-list 101 permit ip host 192.168.111.111 172.21.21.0 0.0.0.63
+access-list 101 permit ip host 192.168.100.100 172.21.21.0 0.0.0.63
+exit
+
+enable 
+config t
+inter s0/1/1
+crypto map mapa-a
+exit
+do wr
+
+sh run
+me debo copiar en un txt la config que pondre en el otro router
+
+crypto isakmp policy 111
+encr aes 256
+authentication pre-share
+group 5
+lifetime 900
+crypto isakmp key frba address 55.55.0.1
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des
+
+access-list 101 permit ip host 192.168.111.111 172.21.21.0 0.0.0.63
+access-list 101 permit ip host 192.168.100.100 172.21.21.0 0.0.0.63
+
+crypto map mapa-a 111 ipsec-isakmp 
+set peer 10.10.10.1
+set peer 20.20.20.1
+set peer 30.30.30.1
+set peer 55.55.0.1
+set security-association lifetime seconds 900
+set transform-set 500 
+match address 101
+
+4.-configurar en router A
+debo usar los otros datos del extremo WAN
+(invertir la ACL)
+
+crypto isakmp policy 111
+encr aes 256
+authentication pre-share
+group 5
+lifetime 900
+crypto isakmp key frba address 110.110.110.1
+crypto ipsec transform-set 500 ah-sha-hmac esp-3des
+access-list 101 permit ip 172.21.21.0 0.0.0.63 host 192.168.111.111 
+access-list 101 permit ip 172.21.21.0 0.0.0.63 host 192.168.100.100 
+crypto map mapa-a 111 ipsec-isakmp 
+set peer 110.110.110.1
+set security-association lifetime seconds 900
+set transform-set 500 
+match address 101
+exit
+
+aplicar lo cambios
+enable
+config t
+pegar lo editado arriba
+
+luego ir a la interfaz
+inter s0/1/1
+crypto map mapa-a
+exit
+do wr
+
+
+
+
+

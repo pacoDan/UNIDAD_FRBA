@@ -1,0 +1,57 @@
+#ROUTER - ASINGAR NOMBRE
+Enable
+Config t
+Hostname [NAME]
+Enable secret redes
+exit
+
+#ROUTER - HABILITAR TelneT
+Enable
+Config t
+redes
+Line vty 0 1
+Password utn
+Login 
+exit
+
+#ROUTER- PUERTOS CONECTADOs A SW: Lenvantarla (si tiene vlans no debo asignarle IP)
+	#Usando una clave: redes
+enable
+config t
+redes
+int f0/0
+no shutdown
+exit
+
+#ROUTER- PUERTOS CONECTADOS A SW con VLANS: Crear sub-interface, asignar modo de encapusalamiento, asignar IP, levantar la sub-interfaces 
+	#Usando una clave: redes
+config t
+redes
+int f0/0.[Nro_Vlan]
+encapsulation dot1q [Nro_Vlan]
+ip address [IP_GatewayDeVlan] [Mascara]
+no shutdown
+exit
+
+
+#ROUTER- PUERTOS CONECTADOS A ROUTERS: Asignar modo de encapsulamiento, asingar IP
+	# Cambiar el número del encapsulamiento
+Enable
+Config t
+Int se1/0
+Encapsulation ppp
+Ip address [IP] [Mascara]
+No shutdwon 
+Exit
+
+#ROUTER- PUERTOS CONECTADOS A ROUTERS (TIENEN RELOJ): Asignar modo de encapsulamiento, asingar IP, asignar CLOCK rate
+	# Cambiar el número del clock rate
+Enable
+Config t
+Int se1/0
+Encapsulation ppp
+Clock rate [Nro]
+Ip address [IP] [Mascara]
+No shutdwon 
+Exit
+
